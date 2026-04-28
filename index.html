@@ -6,114 +6,231 @@
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
       margin: 0;
-      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      padding: 20px;
     }
 
     .card {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: center;
+      background: #ffffff;
+      width: 100%;
+      max-width: 760px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      padding: 45px 55px;
+      box-sizing: border-box;
     }
 
     h1 {
-      font-size: 20px;
-      margin-bottom: 20px;
+      text-align: center;
+      font-size: 34px;
+      margin: 0 0 35px;
+      color: #111827;
     }
 
-    .status {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
+    .valid-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 40px;
+      color: #147a24;
+      font-size: 34px;
+      font-weight: 700;
     }
 
-    .valid {
-      color: #2e7d32;
+    .check-circle {
+      width: 78px;
+      height: 78px;
+      border: 6px solid #147a24;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      line-height: 1;
     }
 
-    .invalid {
-      color: #c62828;
+    .details {
+      margin-top: 10px;
     }
 
-    .info {
-      text-align: left;
-      margin-top: 15px;
+    .row {
+      display: grid;
+      grid-template-columns: 70px 180px 1fr;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 22px 0;
+      column-gap: 18px;
     }
 
-    .info p {
-      margin: 6px 0;
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .icon {
+      font-size: 32px;
+      color: #1f3f68;
+      text-align: center;
     }
 
     .label {
-      font-weight: bold;
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .value {
+      font-size: 24px;
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .status-valid {
+      color: #147a24;
+      font-weight: 500;
+    }
+
+    .invalid-header {
+      text-align: center;
+      color: #b91c1c;
+      font-size: 30px;
+      font-weight: 700;
+      margin-top: 20px;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 18px;
+      color: #4b5563;
+      margin-top: 15px;
     }
 
     .loading {
-      color: #555;
+      text-align: center;
+      font-size: 22px;
+      color: #4b5563;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 30px 24px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .valid-header {
+        flex-direction: column;
+        font-size: 26px;
+        gap: 14px;
+      }
+
+      .check-circle {
+        width: 64px;
+        height: 64px;
+        font-size: 38px;
+      }
+
+      .row {
+        grid-template-columns: 45px 1fr;
+        row-gap: 6px;
+      }
+
+      .icon {
+        font-size: 26px;
+      }
+
+      .label {
+        font-size: 18px;
+      }
+
+      .value {
+        grid-column: 2 / 3;
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 
 <body>
-
   <div class="card">
     <h1>Certificate Verification</h1>
     <div id="result" class="loading">Verifying...</div>
   </div>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const cocId = params.get("cocId");
-  const token = params.get("token");
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const cocId = params.get("cocId");
+    const token = params.get("token");
 
-  const resultDiv = document.getElementById("result");
+    const resultDiv = document.getElementById("result");
 
-  if (!cocId || !token) {
-    resultDiv.innerHTML = "<div class='status invalid'>Invalid QR Code</div>";
-  } else {
+    if (!cocId || !token) {
+      resultDiv.innerHTML = `
+        <div class="invalid-header">Invalid QR Code</div>
+        <div class="message">The QR code is missing required verification information.</div>
+      `;
+    } else {
+      fetch(`https://coc-verification-api-arf5hbb7dhesfgd2.malaysiawest-01.azurewebsites.net/api/verify?cocId=${encodeURIComponent(cocId)}&token=${encodeURIComponent(token)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.result === "Valid") {
+            resultDiv.className = "";
 
-    fetch(`https://coc-verification-api-arf5hbb7dhesfgd2.malaysiawest-01.azurewebsites.net/api/verify?cocId=${encodeURIComponent(cocId)}&token=${encodeURIComponent(token)}`)
-      .then(res => res.json())
-      .then(data => {
+            resultDiv.innerHTML = `
+              <div class="valid-header">
+                <div class="check-circle">✓</div>
+                <div>Certificate is VALID</div>
+              </div>
 
-        if (data.result === "Valid") {
+              <div class="details">
+                <div class="row">
+                  <div class="icon">🪪</div>
+                  <div class="label">COC ID:</div>
+                  <div class="value">${data.cocId || "-"}</div>
+                </div>
+
+                <div class="row">
+                  <div class="icon">👤</div>
+                  <div class="label">Customer:</div>
+                  <div class="value">${data.customer || "-"}</div>
+                </div>
+
+                <div class="row">
+                  <div class="icon">📄</div>
+                  <div class="label">Details:</div>
+                  <div class="value">${data.details || "-"}</div>
+                </div>
+
+                <div class="row">
+                  <div class="icon">🛡️</div>
+                  <div class="label">Status:</div>
+                  <div class="value status-valid">${data.status || "-"}</div>
+                </div>
+              </div>
+            `;
+          } else {
+            resultDiv.innerHTML = `
+              <div class="invalid-header">Certificate NOT VERIFIED</div>
+              <div class="message">The certificate may be invalid, revoked, expired, or tampered.</div>
+            `;
+          }
+        })
+        .catch((err) => {
+          console.error(err);
           resultDiv.innerHTML = `
-            <div class="status valid">✔ Certificate is VALID</div>
-
-            <div class="info">
-              <p><span class="label">COC ID:</span> ${data.cocId}</p>
-              <p><span class="label">Customer:</span> ${data.customer}</p>
-              <p><span class="label">Details:</span> ${data.details}</p>
-              <p><span class="label">Status:</span> ${data.status}</p>
-            </div>
+            <div class="invalid-header">Service Unavailable</div>
+            <div class="message">Please try again later.</div>
           `;
-        } else {
-          resultDiv.innerHTML = `
-            <div class="status invalid">✖ Certificate NOT VERIFIED</div>
-            <p>The certificate may be invalid, revoked, or tampered.</p>
-          `;
-        }
-
-      })
-      .catch((err) => {
-        console.error(err);
-        resultDiv.innerHTML = `
-          <div class="status invalid">Service Unavailable</div>
-          <p>Please try again later.</p>
-        `;
-      });
-  }
-</script>
-
+        });
+    }
+  </script>
 </body>
 </html>
