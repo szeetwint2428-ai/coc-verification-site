@@ -1,11 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COC Verification</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .status {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .valid {
+      color: #2e7d32;
+    }
+
+    .invalid {
+      color: #c62828;
+    }
+
+    .info {
+      text-align: left;
+      margin-top: 15px;
+    }
+
+    .info p {
+      margin: 6px 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .loading {
+      color: #555;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Certificate Verification</h1>
-  <div id="result">Loading...</div>
+
+  <div class="card">
+    <h1>Certificate Verification</h1>
+    <div id="result" class="loading">Verifying...</div>
+  </div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -15,48 +79,41 @@
   const resultDiv = document.getElementById("result");
 
   if (!cocId || !token) {
-    resultDiv.innerHTML = "<h2 style='color:red;'>Invalid QR Code</h2>";
+    resultDiv.innerHTML = "<div class='status invalid'>Invalid QR Code</div>";
   } else {
-    resultDiv.innerHTML = "Verifying...";
 
     fetch(`https://coc-verification-api-arf5hbb7dhesfgd2.malaysiawest-01.azurewebsites.net/api/verify?cocId=${encodeURIComponent(cocId)}&token=${encodeURIComponent(token)}`)
       .then(res => res.json())
       .then(data => {
+
         if (data.result === "Valid") {
-          let pdfButton = "";
-
-          if (data.officialPdfUrl) {
-            pdfButton = `
-              <p>
-                <a href="${data.officialPdfUrl}" target="_blank">
-                  View Official Original PDF
-                </a>
-              </p>
-            `;
-          }
-
           resultDiv.innerHTML = `
-            <h2 style="color:green;">Certificate is VALID</h2>
-            <p><b>COC ID:</b> ${data.cocId}</p>
-            <p><b>Customer:</b> ${data.customer}</p>
-            <p><b>Details:</b> ${data.details}</p>
-            <p><b>Status:</b> ${data.status}</p>
-            ${pdfButton}
+            <div class="status valid">✔ Certificate is VALID</div>
+
+            <div class="info">
+              <p><span class="label">COC ID:</span> ${data.cocId}</p>
+              <p><span class="label">Customer:</span> ${data.customer}</p>
+              <p><span class="label">Details:</span> ${data.details}</p>
+              <p><span class="label">Status:</span> ${data.status}</p>
+            </div>
           `;
         } else {
           resultDiv.innerHTML = `
-            <h2 style="color:red;">Certificate could not be verified</h2>
-            <p>The QR code may be invalid, expired, revoked, or tampered.</p>
+            <div class="status invalid">✖ Certificate NOT VERIFIED</div>
+            <p>The certificate may be invalid, revoked, or tampered.</p>
           `;
         }
+
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         resultDiv.innerHTML = `
-          <h2 style="color:red;">Verification service unavailable</h2>
+          <div class="status invalid">Service Unavailable</div>
           <p>Please try again later.</p>
         `;
       });
   }
 </script>
+
 </body>
 </html>
