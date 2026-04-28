@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COC Verification</title>
+</head>
+<body>
+  <h1>Certificate Verification</h1>
+  <div id="result">Loading...</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const cocId = params.get("cocId");
+  const token = params.get("token");
+
+  const resultDiv = document.getElementById("result");
+
+  if (!cocId || !token) {
+    resultDiv.innerHTML = "<h2 style='color:red;'>Invalid QR Code</h2>";
+  } else {
+    resultDiv.innerHTML = "Verifying...";
+
+    fetch(`https://coc-verification-api-arf5hbb7dhesfgd2.malaysiawest-01.azurewebsites.net/api/verify?cocId=${encodeURIComponent(cocId)}&token=${encodeURIComponent(token)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.result === "Valid") {
+          let pdfButton = "";
+
+          if (data.officialPdfUrl) {
+            pdfButton = `
+              <p>
+                <a href="${data.officialPdfUrl}" target="_blank">
+                  View Official Original PDF
+                </a>
+              </p>
+            `;
+          }
+
+          resultDiv.innerHTML = `
+            <h2 style="color:green;">Certificate is VALID</h2>
+            <p><b>COC ID:</b> ${data.cocId}</p>
+            <p><b>Customer:</b> ${data.customer}</p>
+            <p><b>Details:</b> ${data.details}</p>
+            <p><b>Status:</b> ${data.status}</p>
+            ${pdfButton}
+          `;
+        } else {
+          resultDiv.innerHTML = `
+            <h2 style="color:red;">Certificate could not be verified</h2>
+            <p>The QR code may be invalid, expired, revoked, or tampered.</p>
+          `;
+        }
+      })
+      .catch(() => {
+        resultDiv.innerHTML = `
+          <h2 style="color:red;">Verification service unavailable</h2>
+          <p>Please try again later.</p>
+        `;
+      });
+  }
+</script>
+</body>
+</html>
