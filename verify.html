@@ -21,7 +21,7 @@
     .card {
       background: #ffffff;
       width: 100%;
-      max-width: 780px;
+      max-width: 820px;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
       padding: 42px 55px;
@@ -72,10 +72,10 @@
 
     .row {
       display: grid;
-      grid-template-columns: 70px 170px 1fr;
+      grid-template-columns: 70px 230px 1fr;
       align-items: center;
       border-bottom: 1px solid #e5e7eb;
-      padding: 22px 0;
+      padding: 20px 0;
       column-gap: 18px;
     }
 
@@ -84,7 +84,7 @@
     }
 
     .icon {
-      font-size: 28px;
+      font-size: 27px;
       color: #0f4f3f;
       display: flex;
       align-items: center;
@@ -92,20 +92,15 @@
     }
 
     .label {
-      font-size: 23px;
+      font-size: 21px;
       font-weight: 700;
       color: #111827;
     }
 
     .value {
-      font-size: 23px;
+      font-size: 21px;
       color: #111827;
       word-break: break-word;
-    }
-
-    .status-valid {
-      color: #147a24;
-      font-weight: 600;
     }
 
     .invalid-header {
@@ -201,6 +196,16 @@
 
     const resultDiv = document.getElementById("result");
 
+    function row(icon, label, value) {
+      return `
+        <div class="row">
+          <div class="icon"><i class="${icon}"></i></div>
+          <div class="label">${label}:</div>
+          <div class="value">${value || "-"}</div>
+        </div>
+      `;
+    }
+
     if (!token) {
       resultDiv.innerHTML = `
         <div class="invalid-header">
@@ -225,29 +230,19 @@
               </div>
 
               <div class="details">
-                <div class="row">
-                  <div class="icon"><i class="fa-solid fa-id-card"></i></div>
-                  <div class="label">COC ID:</div>
-                  <div class="value">${data.cocId || "-"}</div>
-                </div>
+                ${row("fa-solid fa-certificate", "COC No.", data.cocNo)}
+                ${row("fa-solid fa-calendar-days", "COC Date", data.cocDate)}
+                ${row("fa-solid fa-building", "Customer", data.customer)}
+                ${row("fa-solid fa-barcode", "Customer Part Number", data.customerPartNumber)}
+                ${row("fa-solid fa-code-branch", "Customer Part Revision", data.customerPartRevision)}
 
-                <div class="row">
-                  <div class="icon"><i class="fa-solid fa-building"></i></div>
-                  <div class="label">Customer:</div>
-                  <div class="value">${data.customer || "-"}</div>
-                </div>
+                ${data.description ? row("fa-solid fa-file-lines", "Description", data.description) : ""}
 
-                <div class="row">
-                  <div class="icon"><i class="fa-solid fa-file-lines"></i></div>
-                  <div class="label">Details:</div>
-                  <div class="value">${data.details || "-"}</div>
-                </div>
+                ${row("fa-solid fa-cubes", "Quantity", data.quantity)}
 
-                <div class="row">
-                  <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
-                  <div class="label">Status:</div>
-                  <div class="value status-valid">${data.status || "-"}</div>
-                </div>
+                ${data.remark ? row("fa-solid fa-comment-dots", "Remark", data.remark) : ""}
+
+                ${row("fa-solid fa-clipboard-check", "Specification", data.specification)}
               </div>
             `;
           } else {
