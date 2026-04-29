@@ -197,12 +197,11 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const cocId = params.get("cocId");
     const token = params.get("token");
 
     const resultDiv = document.getElementById("result");
 
-    if (!cocId || !token) {
+    if (!token) {
       resultDiv.innerHTML = `
         <div class="invalid-header">
           <i class="fa-solid fa-triangle-exclamation"></i>
@@ -211,7 +210,7 @@
         <div class="message">The QR code is missing required verification information.</div>
       `;
     } else {
-      fetch(`https://coc-verification-api-arf5hbb7dhesfgd2.malaysiawest-01.azurewebsites.net/api/verify?cocId=${encodeURIComponent(cocId)}&token=${encodeURIComponent(token)}`)
+      fetch(`https://coc-verification-api-arf5hbb7dhesfgd2.malaysiawest-01.azurewebsites.net/api/verify?token=${encodeURIComponent(token)}`)
         .then(res => res.json())
         .then(data => {
           if (data.result === "Valid") {
