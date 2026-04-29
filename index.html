@@ -206,6 +206,22 @@
       `;
     }
 
+    function formatDate(value) {
+      if (!value) return "-";
+
+      const date = new Date(value);
+
+      if (isNaN(date.getTime())) {
+        return value;
+      }
+
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+    }
+
     if (!token) {
       resultDiv.innerHTML = `
         <div class="invalid-header">
@@ -231,7 +247,7 @@
 
               <div class="details">
                 ${row("fa-solid fa-certificate", "COC No.", data.cocNo)}
-                ${row("fa-solid fa-calendar-days", "COC Date", data.cocDate)}
+                ${row("fa-solid fa-calendar-days", "COC Date", formatDate(data.cocDate))}
                 ${row("fa-solid fa-building", "Customer", data.customer)}
                 ${row("fa-solid fa-barcode", "Customer Part Number", data.customerPartNumber)}
                 ${row("fa-solid fa-code-branch", "Customer Part Revision", data.customerPartRevision)}
