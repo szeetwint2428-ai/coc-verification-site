@@ -40,28 +40,38 @@
       margin: 0 0 34px;
       color: #111827;
     }
-    
-    .valid-header {
-      display: block;
-      position: relative;
-      margin-bottom: 38px;
-      padding-left: 70px; /* space for icon */
+
+    .notice-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      background: #f3f6fb;
+      border: 1px solid #dbe3ee;
+      border-left: 6px solid #1f2937;
+      padding: 18px 22px;
+      border-radius: 12px;
+      margin-bottom: 35px;
     }
-    
-    .check-circle {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 55px;
-      height: 55px;
-      border: 5px solid #1f2937;
+
+    .notice-icon {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
       border-radius: 50%;
-      background: #eef2f7;
+      background: #e5eaf2;
       color: #1f2937;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 22px;
+      margin-top: 3px;
+    }
+
+    .notice-text {
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 700;
+      color: #111827;
     }
 
     .details {
@@ -112,10 +122,9 @@
 
     .message {
       text-align: center;
-      font-size: 22px;
-      line-height: 1.5;
-      font-weight: 700;
-      color: #111827;
+      font-size: 18px;
+      color: #4b5563;
+      margin-top: 15px;
     }
 
     .loading {
@@ -126,8 +135,8 @@
 
     .footer {
       margin-top: 30px;
-      text-align: justify;
-      font-size: 18px;
+      text-align: center;
+      font-size: 13px;
       color: #6b7280;
     }
 
@@ -144,16 +153,15 @@
         font-size: 25px;
       }
 
-      .valid-header {
+      .notice-box {
         flex-direction: column;
-        font-size: 25px;
-        gap: 14px;
+        align-items: center;
+        text-align: center;
+        padding: 18px;
       }
 
-      .check-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 25px;
+      .notice-text {
+        font-size: 16px;
       }
 
       .row {
@@ -167,6 +175,7 @@
 
       .label {
         font-size: 18px;
+        white-space: normal;
       }
 
       .value {
@@ -186,7 +195,7 @@
     <div id="result" class="loading">Verifying...</div>
 
     <div class="footer">
-      The data above is retrieved from official database of ATC Surface Finishing.<br>
+      Verified by ATC Surface Finishing
     </div>
   </div>
 
@@ -238,18 +247,18 @@
             resultDiv.className = "";
 
             resultDiv.innerHTML = `
-              <div class="valid-header">
-                <div class="check-circle">
+              <div class="notice-box">
+                <div class="notice-icon">
                   <i class="fa-solid fa-database"></i>
                 </div>
-              
-                <div class="valid-message">
+
+                <div class="notice-text">
+                  The data below is retrieved from ATC Surface Finishing’s official database.<br>
                   Please ensure all details match your certificate copy.<br>
-                  Matching information confirms validity; any discrepancy may<br>
-                  indicate an invalid or fraudulent certificate.
+                  Matching information confirms validity; any discrepancy may indicate an invalid or fraudulent certificate.
                 </div>
               </div>
-              
+
               <div class="details">
                 ${row("fa-solid fa-certificate", "COC No.", data.cocNo)}
                 ${row("fa-solid fa-calendar-days", "COC Date", formatDate(data.cocDate))}
