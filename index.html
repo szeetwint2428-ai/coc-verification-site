@@ -264,13 +264,9 @@
                 ${row("fa-solid fa-building", "Customer", data.customer)}
                 ${row("fa-solid fa-barcode", "Customer Part Number", data.customerPartNumber)}
                 ${row("fa-solid fa-code-branch", "Customer Part Revision", data.customerPartRevision)}
-
-                ${data.description ? row("fa-solid fa-file-lines", "Description", data.description) : ""}
-
+                ${row("fa-solid fa-file-lines", "Description", data.description || "-")}
                 ${row("fa-solid fa-cubes", "Quantity", data.quantity)}
-
-                ${data.remark ? row("fa-solid fa-comment-dots", "Remark", data.remark) : ""}
-
+                ${row("fa-solid fa-comment-dots", "Remark", data.remark || "-")}
                 ${row("fa-solid fa-clipboard-check", "Specification", data.specification)}
               </div>
             `;
