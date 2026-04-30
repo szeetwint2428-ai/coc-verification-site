@@ -21,7 +21,7 @@
     .card {
       background: #ffffff;
       width: 100%;
-      max-width: 900px;
+      max-width: 820px;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
       padding: 42px 55px;
@@ -36,8 +36,8 @@
 
     h1 {
       text-align: center;
-      font-size: 30px;
-      margin: 0 0 30px;
+      font-size: 32px;
+      margin: 0 0 34px;
       color: #111827;
     }
 
@@ -74,40 +74,41 @@
       color: #111827;
     }
 
-    .top-info {
-      margin-bottom: 34px;
-      font-size: 18px;
-      line-height: 1.45;
-      color: #111827;
+    .details {
+      margin-top: 10px;
     }
 
-    .top-info-row {
+    .row {
       display: grid;
-      grid-template-columns: 120px 1fr;
-      column-gap: 8px;
+      grid-template-columns: 70px 280px 1fr;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 0;
+      column-gap: 18px;
     }
 
-    .pdf-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 18px;
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .icon {
+      font-size: 27px;
+      color: #0f4f3f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .label {
+      font-size: 21px;
+      font-weight: 700;
       color: #111827;
-    }
-
-    .pdf-table td {
-      padding: 13px 0;
-      vertical-align: top;
-    }
-
-    .pdf-label {
-      width: 260px;
-      font-weight: 400;
       white-space: nowrap;
-      padding-right: 25px;
     }
 
-    .pdf-value {
-      font-weight: 400;
+    .value {
+      font-size: 21px;
+      color: #111827;
       word-break: break-word;
     }
 
@@ -133,9 +134,9 @@
     }
 
     .footer {
-      margin-top: 35px;
+      margin-top: 30px;
       text-align: center;
-      font-size: 13px;
+      font-size: 18px;
       color: #6b7280;
     }
 
@@ -149,7 +150,7 @@
       }
 
       h1 {
-        font-size: 24px;
+        font-size: 25px;
       }
 
       .notice-box {
@@ -160,35 +161,26 @@
       }
 
       .notice-text {
-        font-size: 15px;
-      }
-
-      .top-info {
         font-size: 16px;
       }
 
-      .top-info-row {
-        grid-template-columns: 105px 1fr;
+      .row {
+        grid-template-columns: 45px 1fr;
+        row-gap: 6px;
       }
 
-      .pdf-table {
-        font-size: 16px;
+      .icon {
+        font-size: 23px;
       }
 
-      .pdf-table tr {
-        display: block;
-        padding: 10px 0;
-      }
-
-      .pdf-table td {
-        display: block;
-        padding: 3px 0;
-      }
-
-      .pdf-label {
-        width: auto;
-        font-weight: 700;
+      .label {
+        font-size: 18px;
         white-space: normal;
+      }
+
+      .value {
+        grid-column: 2 / 3;
+        font-size: 18px;
       }
     }
   </style>
@@ -203,7 +195,7 @@
     <div id="result" class="loading">Verifying...</div>
 
     <div class="footer">
-      Verified by ATC Surface Finishing
+      The data below is retrieved from official database of ATC Surface Finishing.<br>
     </div>
   </div>
 
@@ -213,8 +205,14 @@
 
     const resultDiv = document.getElementById("result");
 
-    function clean(value) {
-      return value && String(value).trim() !== "" ? value : "-";
+    function row(icon, label, value) {
+      return `
+        <div class="row">
+          <div class="icon"><i class="${icon}"></i></div>
+          <div class="label">${label}:</div>
+          <div class="value">${value || "-"}</div>
+        </div>
+      `;
     }
 
     function formatDate(value) {
@@ -228,18 +226,9 @@
 
       return date.toLocaleDateString("en-GB", {
         day: "2-digit",
-        month: "short",
+        month: "2-digit",
         year: "numeric"
-      }).replace(/ /g, "-");
-    }
-
-    function tableRow(label, value) {
-      return `
-        <tr>
-          <td class="pdf-label">${label}</td>
-          <td class="pdf-value">${clean(value)}</td>
-        </tr>
-      `;
+      });
     }
 
     if (!token) {
@@ -264,34 +253,26 @@
                 </div>
 
                 <div class="notice-text">
-                  The data below is retrieved from ATC Surface Finishing’s official database.<br>
                   Please ensure all details match your certificate copy.<br>
                   Matching information confirms validity; any discrepancy may indicate an invalid or fraudulent certificate.
                 </div>
               </div>
 
-              <div class="top-info">
-                <div class="top-info-row">
-                  <div>COC No. :</div>
-                  <div>${clean(data.cocNo)}</div>
-                </div>
-                <div class="top-info-row">
-                  <div>COC Date :</div>
-                  <div>${formatDate(data.cocDate)}</div>
-                </div>
-              </div>
+              <div class="details">
+                ${row("fa-solid fa-certificate", "COC No.", data.cocNo)}
+                ${row("fa-solid fa-calendar-days", "COC Date", formatDate(data.cocDate))}
+                ${row("fa-solid fa-building", "Customer", data.customer)}
+                ${row("fa-solid fa-barcode", "Customer Part Number", data.customerPartNumber)}
+                ${row("fa-solid fa-code-branch", "Customer Part Revision", data.customerPartRevision)}
 
-              <table class="pdf-table">
-                <tbody>
-                  ${tableRow("Customer", data.customer)}
-                  ${tableRow("Customer Part Number", data.customerPartNumber)}
-                  ${tableRow("Customer Part Revision", data.customerPartRevision)}
-                  ${data.description ? tableRow("Description", data.description) : ""}
-                  ${tableRow("Quantity", data.quantity)}
-                  ${data.remark ? tableRow("Remarks", data.remark) : ""}
-                  ${tableRow("Specification", data.specification)}
-                </tbody>
-              </table>
+                ${data.description ? row("fa-solid fa-file-lines", "Description", data.description) : ""}
+
+                ${row("fa-solid fa-cubes", "Quantity", data.quantity)}
+
+                ${data.remark ? row("fa-solid fa-comment-dots", "Remark", data.remark) : ""}
+
+                ${row("fa-solid fa-clipboard-check", "Specification", data.specification)}
+              </div>
             `;
           } else {
             resultDiv.innerHTML = `
