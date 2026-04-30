@@ -43,11 +43,11 @@
 
     .valid-header {
       display: flex;
-      align-items: center;
+      align-items: left;
       justify-content: center;
       gap: 22px;
       margin-bottom: 38px;
-      color: #147a24;
+      color: #1f2937;
       font-size: 32px;
       font-weight: 700;
     }
@@ -55,7 +55,7 @@
     .check-circle {
       width: 50px;
       height: 50px;
-      border: 6px solid #1f2937;
+      border: 3px solid #1f2937;
       border-radius: 50%;
       background: #eef2f7;
       color: #1f2937;
@@ -72,7 +72,7 @@
 
     .row {
       display: grid;
-      grid-template-columns: 70px 230px 1fr;
+      grid-template-columns: 70px 280px 1fr;
       align-items: center;
       border-bottom: 1px solid #e5e7eb;
       padding: 20px 0;
@@ -95,16 +95,20 @@
       font-size: 21px;
       font-weight: 700;
       color: #111827;
+      white-space: nowrap;
     }
 
     .value {
       font-size: 21px;
       color: #111827;
       word-break: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .invalid-header {
-      text-align: left;
+      text-align: center;
       color: #b91c1c;
       font-size: 30px;
       font-weight: 700;
