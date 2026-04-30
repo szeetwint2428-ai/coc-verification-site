@@ -55,10 +55,10 @@
     .check-circle {
       width: 76px;
       height: 76px;
-      border: 6px solid #147a24;
+      border: 6px solid #1f2937;
       border-radius: 50%;
-      background: #e8f5e9;
-      color: #147a24;
+      background: #eef2f7;
+      color: #1f2937;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -126,8 +126,8 @@
 
     .footer {
       margin-top: 30px;
-      text-align: center;
-      font-size: 18px;
+      text-align: justify;
+      font-size: 20px;
       color: #6b7280;
     }
 
@@ -151,9 +151,9 @@
       }
 
       .check-circle {
-        width: 62px;
-        height: 62px;
-        font-size: 34px;
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
       }
 
       .row {
@@ -181,14 +181,12 @@
   <div class="card">
     <img src="logo.jpeg" alt="ATC Logo" class="logo">
 
-    <h1>Certificate Verification</h1>
+    <h1>Certificate of Conformity Verification</h1>
 
     <div id="result" class="loading">Verifying...</div>
 
     <div class="footer">
-      Customers are advised to compare the details displayed with the original Certificate of Conformity in their possession.
-      A complete match confirms the authenticity of the certificate. 
-      Any inconsistency should be treated as a potential indication of an invalid or falsified document.
+      The data below is retrieved from ATC’s official database.<br>
     </div>
   </div>
 
@@ -242,10 +240,11 @@
             resultDiv.innerHTML = `
               <div class="valid-header">
                 <div class="check-circle">
-                  <i class="fa-solid fa-check"></i>
+                  <i class="fa-solid fa-database"></i>
+                <div style="text-align:center; font-size:20px; line-height:1.5;">
+                  Please ensure all details match your certificate copy.<br>
+                  Matching information confirms validity; any discrepancy may indicate an invalid or fraudulent certificate.
                 </div>
-                <div>Certificate is VALID</div>
-              </div>
 
               <div class="details">
                 ${row("fa-solid fa-certificate", "COC No.", data.cocNo)}
