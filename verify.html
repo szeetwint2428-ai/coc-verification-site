@@ -40,16 +40,14 @@
       margin: 0 0 34px;
       color: #111827;
     }
-
+    
     .valid-header {
-      display: flex;
-      align-items: left;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      align-items: center;
       gap: 22px;
       margin-bottom: 38px;
-      color: #1f2937;
-      font-size: 32px;
-      font-weight: 700;
+      color: #111827;
     }
 
     .check-circle {
@@ -102,9 +100,6 @@
       font-size: 21px;
       color: #111827;
       word-break: break-word;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .invalid-header {
@@ -117,9 +112,9 @@
 
     .message {
       text-align: center;
-      font-size: 18px;
-      color: #4b5563;
-      margin-top: 15px;
+      font-size: 20px;
+      line-height: 1.5;
+      font-weight: 700;
     }
 
     .loading {
@@ -247,9 +242,10 @@
                   <i class="fa-solid fa-database"></i>
                 </div>
               
-                <div style="text-align:center; font-size:20px; line-height:1.5;">
+                <div class="valid-message">
                   Please ensure all details match your certificate copy.<br>
-                  Matching information confirms validity; any discrepancy may indicate an invalid or fraudulent certificate.
+                  Matching information confirms validity; any discrepancy may<br>
+                  indicate an invalid or fraudulent certificate.
                 </div>
               </div>
               
